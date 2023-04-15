@@ -1,38 +1,25 @@
-import Hello from '@/components/Hello'
 import styles from '@/styles/Home.module.css'
 import {useState} from 'react';
+import useNetwork from '@/data/network';
+import Link from 'next/link';
 
 export default function Home() {
-  const [count, setCount] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
+  const [filter, setFilter] = useState('');
+  const { network, isLoading, isError } = useNetwork()
+ 
+  if (isLoading) return <div>Loading...</div>
+  if (isError) return <div>Error</div>
 
-  function handleClick() {
-    setCount(count+1);
-    setIsVisible(!isVisible);
-  }
+  const stations = network.stations.filter(station => station.name.toLowerCase().indexOf(filter.toLowerCase()) >= 0);
 
-  const names = ['Niels', 'Robbe', 'Lena', 'Simon'];
-
-  let namesClass = styles.isNotVisible;
-  if (isVisible) {
-    namesClass = styles.isVisible;
+  function handleFilterChange(e) {
+    setFilter(e.target.value);
   }
 
   return (
     <div>
-      Count: {count}
-      <button onClick={handleClick}>+1</button>
-      {isVisible ? (
-        <div>
-          {names.map((name) => <Hello name={name} key={name}/> )}
-        </div>
-      ) : null}
-      <div style={{display: isVisible ? 'block' : 'none'}}>
-        {names.map((name) => <Hello name={name} key={name}/> )}
-      </div> 
-      <div className={namesClass}>
-        {names.map((name) => <Hello name={name} key={name}/> )}
-      </div>       
+      <input type="text" value={filter} onChange={handleFilterChange}/>
+      {stations.map(station => <Link href={`/stations/${station.id}`} key={station.id}>{station.name}</Link>)}
     </div>
   )
 }
