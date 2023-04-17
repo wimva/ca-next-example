@@ -1,11 +1,32 @@
 import styles from '@/styles/Home.module.css'
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import useNetwork from '@/data/network';
+import {getDistance} from '@/utils/getDistance';
 import Link from 'next/link';
 
 export default function Home() {
   const [filter, setFilter] = useState('');
-  const { network, isLoading, isError } = useNetwork()
+  const [location, setLocation] = useState({});
+  const { network, isLoading, isError } = useNetwork();
+
+  // use effect gebruiken om bv iets op te roepen enkel bij opstart van de app
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+    }
+  }, []);
  
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>Error</div>
@@ -15,11 +36,15 @@ export default function Home() {
   function handleFilterChange(e) {
     setFilter(e.target.value);
   }
+  console.log(stations)
 
   return (
     <div>
       <input type="text" value={filter} onChange={handleFilterChange}/>
-      {stations.map(station => <Link href={`/stations/${station.id}`} key={station.id}>{station.name}</Link>)}
+      {stations.map(station => 
+        <div key={station.id}>
+          <Link href={`/stations/${station.id}`}>{station.name}: {getDistance(location.latitude, location.longitude, station.latitude, station.longitude).distance/1000}km</Link>
+        </div>)}
     </div>
   )
 }
