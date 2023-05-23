@@ -51,7 +51,7 @@ export default function Home() {
       <input type="text" value={filter} onChange={handleFilterChange}/>
       {stations.map(station => 
         <div key={station.id}>
-          <Link href={`/stations/${station.id}`}>{station.name}: {getDistance(location.latitude, location.longitude, station.latitude, station.longitude).distance/1000}km</Link>
+          <Link href={`/stations/${station.id}`}>{station.name}: {station.distance}km</Link>
         </div>)}
     </div>
   )
