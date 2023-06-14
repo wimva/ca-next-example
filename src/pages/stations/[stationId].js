@@ -2,7 +2,7 @@ import useNetwork from '@/data/network';
 import { useRouter } from 'next/router'
 import StationImage from '@/components/StationImage';
 
-export default function Home() {
+export default function Station() {
   const { network, isLoading, isError } = useNetwork()
   const router = useRouter()
  

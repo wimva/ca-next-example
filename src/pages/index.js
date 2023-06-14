@@ -1,4 +1,3 @@
-import styles from '@/styles/Home.module.css'
 import {useState, useEffect} from 'react';
 import useNetwork from '@/data/network';
 import {getDistance} from '@/utils/getDistance';
