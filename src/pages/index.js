@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import useNetwork from '@/data/network';
-import {getDistance} from '@/utils/getDistance';
+import {getDistance} from '@/functions/getDistance';
 import Link from 'next/link';
 
 export default function Home() {
